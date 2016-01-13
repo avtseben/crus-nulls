@@ -20,5 +20,14 @@ public class LineObj {
     {
         return length;
     }
-
+    public dot getDot()
+    {
+	dot d;
+	if(type == "bidir")
+	    {
+		if(dir == "east")	
+			return d = new dot(x, y+length);
+	    }
+	return null;
+    } 
 }

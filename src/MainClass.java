@@ -36,7 +36,9 @@ public class MainClass {
                     break;
                 }
                 LineObj l = f1.lineBuilder(myFig);
+		dot d = l.getDot;
                 prt("TEST = " + l.getLength());
+		prt("dot is " + d.showPosition());
                 myTurn = false; //Ход переходит
             }
             else
