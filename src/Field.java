@@ -40,7 +40,7 @@ public class Field {
                 if (field[i][j] == '*')
                     return true;
             }
-        CrusesAndZeros.prt("Game over");
+        MainClass.prt("Game over");
         return false;
     }
 
