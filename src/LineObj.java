@@ -22,12 +22,12 @@ public class LineObj {
     }
     public dot getDot()
     {
-	dot d;
-	if(type == "bidir")
-	    {
-		if(dir == "east")	
-			return d = new dot(x, y+length);
-	    }
-	return null;
-    } 
+        dot d;
+        if(type == "bidir")
+        {
+            if(dir == "gorizontal")
+                return d = new dot(x, y+length);
+        }
+        return null;
+    }
 }

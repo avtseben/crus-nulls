@@ -1,3 +1,4 @@
+//import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -6,13 +7,15 @@ import java.util.Scanner;
  */
 public class MainClass {
 
-    public static Random rand = new Random();
-    public static void prt(String s) {System.out.println(s);}
+    public static Random rand = new Random();//Random
+    public static void prt(String s) {System.out.println(s);}//Short style print
+    public static Field f1 = new Field();//Game Field for everybody
 
     public static void main (String[] args)
     {
+        //ArrayList lineListMyFig = new ArrayList();
+        AutoPlayer ap1 = new AutoPlayer();
         Scanner sc = new Scanner(System.in);
-        Field f1 = new Field();
         System.out.println("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
         boolean myTurn = true;
         char myFig = 'X';
@@ -28,17 +31,15 @@ public class MainClass {
                     x = sc.nextInt() - 1; //Игрок указывает координаты считая от 1-цы
                     y = sc.nextInt() - 1; //Конвертируем это в нумерацию элементов массива
                     isSetOk = f1.setNode(x, y, myFig); //setNode проверяет чтобы мы повторно не сходили в одну и ту же ячейку
-                    } while (!isSetOk);
+                } while (!isSetOk);
                 if(f1.checkWinner(myFig))
                 {
                     prt("Игрок победил!");
                     f1.showField();
                     break;
                 }
-                LineObj l = f1.lineBuilder(myFig);
-		dot d = l.getDot;
-                prt("TEST = " + l.getLength());
-		prt("dot is " + d.showPosition());
+                dot d = ap1.getStep();//Auto player return coordinates when he step in this time
+                //d.showPosition();
                 myTurn = false; //Ход переходит
             }
             else

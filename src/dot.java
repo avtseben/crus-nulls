@@ -1,12 +1,12 @@
 public class dot
-	{
-		int x,y;
-		public dot(int _x,int _y) {
-			x = _x;
-			y = _y;
-		}
-		public void showPosition()
-		{
-			MainClass.prt("x = " + x + " y = " + y);
-		}
-	}
+{
+    int i,j;
+    public dot(int _i,int _j) {
+        i = _i;
+        j = _j;
+    }
+    public void showPosition()
+    {
+        MainClass.prt("i = " + i + " j = " + j);
+    }
+}

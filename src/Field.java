@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 /**
  * Created by avtseben on 04.01.2016.
  */
@@ -91,25 +92,55 @@ public class Field {
         return false;
     }
 
-    public LineObj lineBuilder(char _ch) {
+    public ArrayList lineBuilder(char _ch) {
+        ArrayList lineList = new ArrayList();//List of lines
         for (int i = 0; i < FIELD_SIZE; i++)
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (field[i][j] == _ch)//Встретили символ
                 {
+                    //С этого момента от точки просматриваются 4 направления(вправо,диагональ вправо-вниз, горизонталь вниз, дагональ влево-вниз)
                     int length = 1;
                     String type = "bidir";
-                    String dir;
-                    for (int n = 1; n <= (FIELD_SIZE - j); n++) {
-                        if (field[i][j + n] == _ch) length++;//Идем влево
-                        else if (length >= 1)//Finish to search line end, line at least 2 points
-                        {
-                            dir = "east";
-                            LineObj l = new LineObj(i, j, length, dir, type);
-                            return l;
+                    String dir = "default";
+                    boolean lineEnd = false;
+                    //--------------Горизонт--------
+                    if ((j == 0) || ((j > 0) && field[i][j - 1] != _ch)) {//Идем вправо, если слева нет нашего символа(если он есть значит линия уже была создана) и если есть перспектива построения линии
+                        int n = 1;
+                        for (n = 1; n < (FIELD_SIZE - j); n++) {
+                            length = 1;
+                            dir = "gorizontal";
+                            if (field[i][j + n] == _ch && lineEnd == false) length++; //Если линия не прерывалась
+                                //else if (field[i][j + n] == _ch && lineEnd == true)//Если линия не прерывалась. Супервариант но его потом проработаетм
+                            else //Finish to search line end, line at least 2 points
+                            {
+                                lineEnd = true;
+                                if (field[i][j + n] != '*' && field[i][j + n] != _ch || (j + 1) == FIELD_SIZE) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
+                                    type = "eastend";//Уперлись справа
+                                    break;
+                                }
+                            }
+
                         }
+                        if ((j > 0) && (n < WIN_LENGTH)) {//Заглянем влево
+                            for (n = 1; n <= (FIELD_SIZE - (FIELD_SIZE - j)); n++) {
+
+                                if ((field[i][j - n] != '*' && field[i][j - n] != _ch || j == 0) && length < WIN_LENGTH) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
+                                    type = "dead";//Уперлись слева
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (type != "dead")
+                            lineList.add(new LineObj(i, j, length, dir, type));
                     }
+                    //------Диагональ-----
+                    //------Вертикаль-----
+                    //------Обратная Диагональ-----
                 }
+
             }
-        return null;
+        return lineList;
     }
 }
+
