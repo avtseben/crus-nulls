@@ -38,8 +38,8 @@ public class MainClass {
                     f1.showField();
                     break;
                 }
-                //dot d = ap1.getStep();//Auto player return coordinates when he step in this time
-                ap1.showLines();
+                dot d = ap1.getStep();//Auto player return coordinates when he step in this time
+                //ap1.showLines();
                 //d.showPosition();
                 myTurn = false; //Ход переходит
             }

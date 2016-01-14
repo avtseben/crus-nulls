@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Field {
 
     private char field[][];
-    public static int FIELD_SIZE = 10;
+    public static int FIELD_SIZE = 4;
     public static int WIN_LENGTH = FIELD_SIZE;//Длина последовательности при которой наступает выйгрыш
 
     public Field() {
@@ -106,16 +106,21 @@ public class Field {
                     //--------------Горизонт--------
                     if ((j == 0) || ((j > 0) && field[i][j - 1] != _ch)) {//Идем вправо, если слева нет нашего символа(если он есть значит линия уже была создана) и если есть перспектива построения линии
                         int n = 1;
-                        for (n = 1; n < (FIELD_SIZE - j); n++) {
-                            length = 1;
+			if(j+1 == FIELD_SIZE) type = "eastend";
+MainClass.prt("type before for= " + type);
+                        for (n = 1; (type != "eastend") || n < (FIELD_SIZE - j); n++) {
                             dir = "gorizontal";
-                            if (field[i][j + n] == _ch && lineEnd == false) length++; //Если линия не прерывалась
-                                //else if (field[i][j + n] == _ch && lineEnd == true)//Если линия не прерывалась. Супервариант но его потом проработаетм
-                            else //Finish to search line end, line at least 2 points
+                            if (field[i][j + n] == _ch && lineEnd == false) 
+			    {
+				length++;
+				if((j+n+1) == FIELD_SIZE) type = "eastend";//мы у правого края
+			    }
+                            else
                             {
                                 lineEnd = true;
                                 if (field[i][j + n] != '*' && field[i][j + n] != _ch || (j + 1) == FIELD_SIZE) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
                                     type = "eastend";//Уперлись справа
+MainClass.prt("Eastend = " + type);
                                     break;
                                 }
                             }

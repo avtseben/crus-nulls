@@ -20,6 +20,11 @@ public class LineObj {
     {
         return length;
     }
+    public String getType()
+    {  
+        return type;
+    }
+
     public dot getDot()
     {
         dot d;
