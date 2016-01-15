@@ -94,6 +94,7 @@ public class Field {
 
     public ArrayList lineBuilder(char _ch) {
         ArrayList lineList = new ArrayList();//List of lines
+
         for (int i = 0; i < FIELD_SIZE; i++)
             for (int j = 0; j < FIELD_SIZE; j++) {
                 if (field[i][j] == _ch)//Встретили символ
@@ -104,44 +105,128 @@ public class Field {
                     String dir = "default";
                     boolean lineEnd = false;
                     //--------------Горизонт--------
-                    if ((j == 0) || ((j > 0) && field[i][j - 1] != _ch)) {//Идем вправо, если слева нет нашего символа(если он есть значит линия уже была создана) и если есть перспектива построения линии
+                    if ((j == 0) || (field[i][j - 1] != _ch)) {//Идем вправо, если слева нет нашего символа(если он есть значит линия уже была создана) и если есть перспектива построения линии
                         int n = 1;
-			if(j+1 == FIELD_SIZE) type = "eastend";
-MainClass.prt("type before for= " + type);
-                        for (n = 1; (type != "eastend") || n < (FIELD_SIZE - j); n++) {
-                            dir = "gorizontal";
-                            if (field[i][j + n] == _ch && lineEnd == false) 
-			    {
-				length++;
-				if((j+n+1) == FIELD_SIZE) type = "eastend";//мы у правого края
-			    }
+                        dir = "gorizontal";
+			            if(j+1 == FIELD_SIZE) type = "eastend";
+                        for (n = 1; n < (FIELD_SIZE - j); n++) {
+                            if (field[i][j + n] == _ch && lineEnd == false) length++;
                             else
                             {
                                 lineEnd = true;
-                                if (field[i][j + n] != '*' && field[i][j + n] != _ch || (j + 1) == FIELD_SIZE) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
+                                if (field[i][j + n] != '*' && field[i][j + n] != _ch || (j + 1) == FIELD_SIZE) {
                                     type = "eastend";//Уперлись справа
-MainClass.prt("Eastend = " + type);
                                     break;
                                 }
                             }
-
                         }
-                        if ((j > 0) && (n < WIN_LENGTH)) {//Заглянем влево
+                        if(type == "eastend" && j == 0 && length < WIN_LENGTH) type = "dead";//Если стоим у левого края и прижаты
+                        else if(type == "eastend" && j > 0 && field[i][j - 1] != '*' && field[i][j - 1] != _ch && length < WIN_LENGTH) type = "dead";//Если справа ограничены и слева враг
+                        else if(type == "eastend" && j+length < WIN_LENGTH) type = "dead";//Не наберем длины
+                        else if (j > 0 && type == "eastend") {//Заглянем влево
                             for (n = 1; n <= (FIELD_SIZE - (FIELD_SIZE - j)); n++) {
-
                                 if ((field[i][j - n] != '*' && field[i][j - n] != _ch || j == 0) && length < WIN_LENGTH) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
                                     type = "dead";//Уперлись слева
                                     break;
                                 }
                             }
                         }
-
                         if (type != "dead")
                             lineList.add(new LineObj(i, j, length, dir, type));
                     }
                     //------Диагональ-----
+                    if ((i == 0) || (j == 0) || (field[i - 1][j - 1] != _ch)) {//!!!!убрал лишнее
+                        int n = 1;
+                        dir = "diagonal";
+                        lineEnd = false;
+                        if(i+1 == FIELD_SIZE || j+1 == FIELD_SIZE) type = "eastend";
+                        for (n = 1; (n < FIELD_SIZE - i) && (n < FIELD_SIZE - j); n++) {
+                            if (field[i + n][j + n] == _ch && lineEnd == false) length++;
+                            else
+                            {
+                                lineEnd = true;
+                                if (field[i + n][j + n] != '*' && field[i + n][j + n] != _ch || (i + n + 1) == FIELD_SIZE || (j + n +1) == FIELD_SIZE) {//!!!!Добавил + n
+                                    type = "eastend";//Уперлись
+                                    break;
+                                }
+                            }
+                        }
+                        if(type == "eastend" && (i == 0 || j == 0) && length < WIN_LENGTH) type = "dead";//Если стоим у левого края и прижаты
+                        else if(type == "eastend" && (i > 0 || j > 0) && field[i - 1][j - 1] != '*' && field[i - 1][j - 1] != _ch && length < WIN_LENGTH) type = "dead";
+                        else if(type == "eastend" && (i+length < WIN_LENGTH || j+length < WIN_LENGTH)) type = "dead";//Не наберем длины
+                        else if ((i > 0 || j > 0) && type == "eastend") {//Заглянем влево
+                            for (n = 1; (n <= (FIELD_SIZE - (FIELD_SIZE - i))) && (n <= (FIELD_SIZE - (FIELD_SIZE - j))); n++) {
+                                if ((field[i - n][j - n] != '*' && field[i - n][j - n] != _ch || j == 0) && length < WIN_LENGTH) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
+                                    type = "dead";//Уперлись слева
+                                    break;
+                                }
+                            }
+                        }
+                        if (type != "dead")
+                            lineList.add(new LineObj(i, j, length, dir, type));
+                    }
                     //------Вертикаль-----
+                    if ((i == 0) || (field[i - 1][j] != _ch)) {//Идем вправо, если слева нет нашего символа(если он есть значит линия уже была создана) и если есть перспектива построения линии
+                        int n = 1;
+                        dir = "vertical";
+                        if(i+1 == FIELD_SIZE) type = "eastend";
+                        for (n = 1; n < (FIELD_SIZE - i); n++) {
+                            if (field[i + n][j] == _ch && lineEnd == false) length++;
+                            else
+                            {
+                                lineEnd = true;
+                                if (field[i + n][j] != '*' && field[i + n][j] != _ch || (i +  1) == FIELD_SIZE) {
+                                    type = "eastend";//Уперлись справа
+                                    break;
+                                }
+                            }
+                        }
+                        if(type == "eastend" && i == 0 && length < WIN_LENGTH) type = "dead";//Если стоим у левого края и прижаты
+                        else if(type == "eastend" && i > 0 && field[i - 1][j] != '*' && field[i - 1][j] != _ch && length < WIN_LENGTH) type = "dead";//Если справа ограничены и слева враг
+                        else if(type == "eastend" && j+length < WIN_LENGTH) type = "dead";//Не наберем длины
+                        else if (i > 0 && type == "eastend") {//Заглянем влево
+                            for (n = 1; n <= (FIELD_SIZE - (FIELD_SIZE - i)); n++) {
+                                if ((field[i - n][j] != '*' && field[i - n][j] != _ch || i == 0) && length < WIN_LENGTH) {//Если  длина блокируется вражеским символом, то лининя считается не перспективной
+                                    type = "dead";//Уперлись слева
+                                    break;
+                                }
+                            }
+                        }
+                        if (type != "dead")
+                            lineList.add(new LineObj(i, j, length, dir, type));
+                    }
                     //------Обратная Диагональ-----
+                    if ((i == 0) || (j == FIELD_SIZE-1) || (field[i - 1][j + 1] != _ch)) {//!!!!убрал лишнее
+                        int n = 1;
+                        dir = "rediagonal";
+                        lineEnd = false;
+                        if(i+1 == FIELD_SIZE || j == 0) type = "eastend";
+                        for (n = 1; (n < FIELD_SIZE - i) && (n <= (FIELD_SIZE - (FIELD_SIZE - j))); n++) {
+                            if (field[i + n][j - n] == _ch && lineEnd == false) length++;
+                            else
+                            {
+                                lineEnd = true;
+                                if (field[i + n][j - n] != '*' && field[i + n][j - n] != _ch || (i + 1) == FIELD_SIZE || j == 0) {
+                                    type = "eastend";//Уперлись
+                                    break;
+                                }
+                            }
+                        }
+                        if(type == "eastend" && (i == 0 || j+1 == FIELD_SIZE) && length < WIN_LENGTH) type = "dead";
+                        else if(type == "eastend" && (i > 0 || j+1 < FIELD_SIZE) && field[i - 1][j + 1] != '*' && field[i - 1][j + 1] != _ch && length < WIN_LENGTH) type = "dead";
+                        else if(type == "eastend" && (i+length < WIN_LENGTH || j+length < WIN_LENGTH)) type = "dead";
+                        else if ((i > 0 || j+1 < FIELD_SIZE) && type == "eastend") {
+                            for (n = 1; (n <= (FIELD_SIZE - (FIELD_SIZE - i))) && (n < FIELD_SIZE - j); n++) {
+                                if ((field[i - n][j + n] != '*' && field[i - n][j + n] != _ch || j+1 == FIELD_SIZE) && length < WIN_LENGTH) {
+                                    type = "dead";//Уперлись слева
+                                    break;
+                                }
+                            }
+                        }
+                        if (type != "dead")
+                            lineList.add(new LineObj(i, j, length, dir, type));
+                    }
+                    //-----Конец поисков-----
                 }
 
             }

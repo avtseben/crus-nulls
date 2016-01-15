@@ -24,15 +24,33 @@ public class LineObj {
     {  
         return type;
     }
+    public String getDir()
+    {
+        return dir;
+    }
+    public int getI()
+    {
+        return x;
+    }
+    public int getJ()
+    {
+        return y;
+    }
+
+
+
 
     public dot getDot()
     {
         dot d;
+/*        dot d;
         if(type == "bidir")
         {
             if(dir == "gorizontal")
                 return d = new dot(x, y+length);
         }
         return null;
+*/
+        return d = new dot(x, y);
     }
 }

@@ -14,18 +14,22 @@ public class MainClass {
     public static void main (String[] args)
     {
         //ArrayList lineListMyFig = new ArrayList();
-        AutoPlayer ap1 = new AutoPlayer();
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
         boolean myTurn = true;
         char myFig = 'X';
         char compFig = 'O';
         f1.showField();
+        AutoPlayer ap1 = new AutoPlayer(myFig);
+        AutoPlayer ap2 = new AutoPlayer(compFig);
 
         while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
             boolean isSetOk;
             int x,y;
             if(myTurn) {
+                ap1.showLines();
+                ap2.showLines();
                 do {
                     prt("Введите координаты в формате x y");
                     x = sc.nextInt() - 1; //Игрок указывает координаты считая от 1-цы
@@ -38,13 +42,15 @@ public class MainClass {
                     f1.showField();
                     break;
                 }
-                dot d = ap1.getStep();//Auto player return coordinates when he step in this time
+                //dot d = ap1.getStep();//Auto player return coordinates when he step in this time
                 //ap1.showLines();
+
                 //d.showPosition();
                 myTurn = false; //Ход переходит
             }
             else
             {
+                //ap2.showLines();
                 do {
                     x = rand.nextInt(Field.FIELD_SIZE);
                     y = rand.nextInt(Field.FIELD_SIZE);
