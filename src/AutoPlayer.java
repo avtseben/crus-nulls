@@ -4,20 +4,37 @@ import java.util.*;
 public class AutoPlayer {
 
     private char Fig;
+    private char enemyFig;
     private static ArrayList lineList = new ArrayList();
 
     public AutoPlayer(char _Fig)
     {
         Fig = _Fig;
+        if(Fig == 'X') enemyFig = 'O';
+	else enemyFig = 'X';
     }
 
     public dot getStep()
     {
 
         lineList = MainClass.f1.lineBuilder(Fig);
-        dot d = ((LineObj)lineList.get(0)).getDot();
+        dot d = ().getDot();
 
         return d;
+    }
+    public LineObj getLongest()
+    {
+	LineObj l = new LineObj();
+	int i = 0;
+	int len = 0;
+	int maxlen = 0;
+	lineList = MainClass.f1.lineBuilder(Fig);
+	for (int i = 0; i < lineList.size(); i++) {
+            len = ((LineObj) lineList.get(i)).getLength();
+	    MainClass.prt("Length is " + len);
+        }	
+	l = lineList.get(i);
+	return l; 
     }
     public void showLines() {
         lineList = MainClass.f1.lineBuilder(Fig);
