@@ -7,22 +7,22 @@ public class LineObj {
     private int y;
     private int length;
     private String dir;
-    private String type;
+    private String lineString;
 
-    public LineObj(int _x,int _y,int _length,String _dir,String _type) {
+    public LineObj(int _x,int _y,int _length,String _dir,String _lineString) {
         x = _x;
         y = _y;
         length = _length;
         dir = _dir;
-        type = _type;
+        lineString = _lineString;
     }
     public int getLength()
     {
         return length;
     }
-    public String getType()
+    public String getlineString()
     {  
-        return type;
+        return lineString;
     }
     public String getDir()
     {
@@ -44,7 +44,7 @@ public class LineObj {
     {
         dot d;
 /*        dot d;
-        if(type == "bidir")
+        if(lineString == "bidir")
         {
             if(dir == "gorizontal")
                 return d = new dot(x, y+length);

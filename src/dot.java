@@ -5,8 +5,16 @@ public class dot
         i = _i;
         j = _j;
     }
+    public int getI()
+    {
+        return i;
+    }
+    public int getJ()
+    {
+        return j;
+    }
     public void showPosition()
     {
-        MainClass.prt("i = " + i + " j = " + j);
+        MainClass.prt("Dot position: i = " + i + " j = " + j);
     }
 }

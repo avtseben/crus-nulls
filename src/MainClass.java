@@ -1,61 +1,56 @@
-//import java.util.ArrayList;
+
 import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Created by avtseben on 04.01.2016.
+ * Крестики - Нолики. Поле - объект  класса Field, где * - пустые игрок расставляет X , комьпютер  O.
+ * Игра - бесконечны цикл. при каждой итерации проверяется наличие пустых ячеек. Перед ходом проверяется не занята ли клетка
+ * Компьютер пока ствит на угад. Интелект в процессе разработки, задумка в том чтобы в классе Field метод lineBuilder
+ * из существующих крестиков и ноликов на поле формировал объекты класса LineObj. Объекты - линии имеют характеристики:
+ * начальная точка (x, y), направление роста и длина. Создан алгоритм создания объектов  LineObj, при этом не создаётся объект если
+ * линию построить невозможно (например она блокирована с двух сторон или не хватит ячеек для постройки полной линии).
+ * Предполагается что комьпютер будет иметь дело с двумя списками ArrayList хранящими свои линии (O) и игрока(X) и основываясь
+ * на максимально длинной линии принимать решение либо блокировать линию игрока либо наращивать свою
  */
 public class MainClass {
 
-    public static Random rand = new Random();//Random
-    public static void prt(String s) {System.out.println(s);}//Short style print
-    public static Field f1 = new Field();//Game Field for everybody
-
+    public static Random rand = new Random();
+    public static void prt(String s) {System.out.println(s);}
+    public static Field f1 = new Field();
     public static void main (String[] args)
     {
-        //ArrayList lineListMyFig = new ArrayList();
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
         boolean myTurn = true;
         char myFig = 'X';
         char compFig = 'O';
-        f1.showField();
-        AutoPlayer ap1 = new AutoPlayer(myFig);
+
+        //AutoPlayer ap1 = new AutoPlayer(myFig);
         AutoPlayer ap2 = new AutoPlayer(compFig);
+        f1.showField();
 
         while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
-            boolean isSetOk;
+            //dot d;
             int x,y;
             if(myTurn) {
-                ap1.showLines();
-                ap2.showLines();
                 do {
                     prt("Введите координаты в формате x y");
                     x = sc.nextInt() - 1; //Игрок указывает координаты считая от 1-цы
                     y = sc.nextInt() - 1; //Конвертируем это в нумерацию элементов массива
-                    isSetOk = f1.setNode(x, y, myFig); //setNode проверяет чтобы мы повторно не сходили в одну и ту же ячейку
-                } while (!isSetOk);
+                } while (!f1.isCellEmpty(y, x));
+                f1.setNode(y, x, myFig);
                 if(f1.checkWinner(myFig))
                 {
                     prt("Игрок победил!");
                     f1.showField();
                     break;
                 }
-                //dot d = ap1.getStep();//Auto player return coordinates when he step in this time
-                //ap1.showLines();
-
-                //d.showPosition();
                 myTurn = false; //Ход переходит
             }
             else
             {
-                //ap2.showLines();
-                do {
-                    x = rand.nextInt(Field.FIELD_SIZE);
-                    y = rand.nextInt(Field.FIELD_SIZE);
-                    isSetOk = f1.setNode(x, y, compFig);
-                } while (!isSetOk);
+                ap2.doStep();//Компьютер ходит
                 if(f1.checkWinner(compFig))
                 {
                     prt("Компьютер победил!");
@@ -63,7 +58,10 @@ public class MainClass {
                     break;
                 }
                 f1.showField();
-                //prt("Комп сходил " + (x+1) + " " + (y+1) + "\n");
+                //------------------
+                //d = ap2.getStep();
+                //d.showPosition();
+                //------------------
                 myTurn = true;
             }
         }
