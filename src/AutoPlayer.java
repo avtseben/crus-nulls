@@ -14,27 +14,30 @@ public class AutoPlayer {
 	else enemyFig = 'X';
     }
 
-    public dot getStep()
+    public int getStep()
     {
+	int i = getLongest();
+//        lineList = MainClass.f1.lineBuilder(Fig);
+        int longestLineIPos = (LineObj) lineList.get(i).getI();
+//        int longestLineJPos = (LineObj)lineList.get(getLongest()).getJ();
 
-        lineList = MainClass.f1.lineBuilder(Fig);
-        dot d = ().getDot();
-
-        return d;
+        return longestLineIPos;
     }
-    public LineObj getLongest()
+    public int getLongest()//Возвращает номер само длинной линии
     {
-	LineObj l = new LineObj();
-	int i = 0;
 	int len = 0;
+	int li = 0;
 	int maxlen = 0;
 	lineList = MainClass.f1.lineBuilder(Fig);
 	for (int i = 0; i < lineList.size(); i++) {
-            len = ((LineObj) lineList.get(i)).getLength();
-	    MainClass.prt("Length is " + len);
+            len = ((LineObj)lineList.get(i)).getLength();
+		if(len > maxlen) { 
+			maxlen = len;
+			li = i;
+		}
+	    MainClass.prt("Try to find Longest length");
         }	
-	l = lineList.get(i);
-	return l; 
+	return li; 
     }
     public void showLines() {
         lineList = MainClass.f1.lineBuilder(Fig);

@@ -28,8 +28,10 @@ public class MainClass {
             boolean isSetOk;
             int x,y;
             if(myTurn) {
-                ap1.showLines();
-                ap2.showLines();
+                //ap1.showLines();
+                //ap2.showLines();
+		int lonLineIpso = ap1.getStep();
+		prt("Longest Line i position = " + lonLineIpso);
                 do {
                     prt("Введите координаты в формате x y");
                     x = sc.nextInt() - 1; //Игрок указывает координаты считая от 1-цы
