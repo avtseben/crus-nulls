@@ -1,17 +1,15 @@
-/**
- * Created by avtseben on 11.01.2016.
- */
-public class LineObj {
 
-    private int x;
+public class LineObj {//Объект линия. Это потенциальная линия которую можно построить.
+
     private int y;
+    private int x;
     private int length;
     private String dir;
     private String lineString;
 
-    public LineObj(int _x,int _y,int _length,String _dir,String _lineString) {
-        x = _x;
+    public LineObj(int _y,int _x,int _length,String _dir,String _lineString) {
         y = _y;
+        x = _x;
         length = _length;
         dir = _dir;
         lineString = _lineString;
@@ -20,37 +18,17 @@ public class LineObj {
     {
         return length;
     }
-    public String getlineString()
-    {  
-        return lineString;
-    }
+    public String getlineString() { return lineString; }
     public String getDir()
     {
         return dir;
     }
     public int getI()
     {
-        return x;
+        return y;
     }
     public int getJ()
     {
-        return y;
-    }
-
-
-
-
-    public dot getDot()
-    {
-        dot d;
-/*        dot d;
-        if(lineString == "bidir")
-        {
-            if(dir == "gorizontal")
-                return d = new dot(x, y+length);
-        }
-        return null;
-*/
-        return d = new dot(x, y);
+        return x;
     }
 }
