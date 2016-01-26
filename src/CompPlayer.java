@@ -1,17 +1,16 @@
-import java.util.ArrayList;
+import java.util.Random;
 
-public class AutoPlayer {//Класс компьютерого игрока. Здесь весь интелект
+public class CompPlayer extends Player {
 
-    private char Fig;
-    private char enemyFig;
-    private static ArrayList lineList = new ArrayList();
+    private Random rand = new Random();
 
-    public AutoPlayer(char _Fig)
+    public CompPlayer (char _Fig, Field _f)
     {
-        Fig = _Fig;
+        super(_Fig, _f);
         if(Fig == 'X') enemyFig = 'O';
         else enemyFig = 'X';
     }
+
     private boolean myFirstStep()
     {
         LineObj line = (LineObj) lineList.get(getLongest());
@@ -24,46 +23,46 @@ public class AutoPlayer {//Класс компьютерого игрока. З�
     {
         int x,y;
         String stepDesition = "";
-        lineList = MainClass.f1.listLineBuilder(Fig);//Собирает информацию о линиях на поле
+        lineList = targetField.listLineBuilder(Fig);//Собирает информацию о линиях на поле
 
         if(myFirstStep()) {
             //1. Если для это мой первый ход. Случайно подбираем координаты
             stepDesition = "random";
             do {
-                x = MainClass.rand.nextInt(Field.FIELD_SIZE);
-                y = MainClass.rand.nextInt(Field.FIELD_SIZE);
-            } while (!MainClass.f1.isCellEmpty(y, x));
-            MainClass.f1.setNode(y, x, Fig);
+                x = rand.nextInt(Field.FIELD_SIZE);
+                y = rand.nextInt(Field.FIELD_SIZE);
+            } while (!targetField.isCellEmpty(y, x));
+            targetField.setNode(y, x, Fig);
             MainClass.prt("Comp Step Desition is: " + stepDesition);
         }
         else {
-           //2.Проверка на шах и мат
+            //2.Проверка на шах и мат
             for (int i = 0; i < Field.FIELD_SIZE; i++)
                 for (int j = 0; j < Field.FIELD_SIZE; j++) {
-                    if (MainClass.f1.isCellEmpty(i, j)) {
-                        MainClass.f1.setNode(i, j, enemyFig);//Пробуем поставить на угад за противника
-                        if (stepDesition != "StopEnemy!" && MainClass.f1.checkWinner(enemyFig))//И если видим что он при этом выйграет. То сразу же блокируем
+                    if (targetField.isCellEmpty(i, j)) {
+                        targetField.setNode(i, j, enemyFig);//Пробуем поставить на угад за противника
+                        if (stepDesition != "StopEnemy!" && targetField.checkWinner(enemyFig))//И если видим что он при этом выйграет. То сразу же блокируем
                         {
                             y = i;
                             x = j;
                             stepDesition = "StopEnemy!";
-                            MainClass.f1.setNode(y, x, Fig);
+                            targetField.setNode(y, x, Fig);
                         } else
-                            MainClass.f1.setNode(i, j, '*');
+                            targetField.setNode(i, j, '*');
                     }
                 }
 
             for (int i = 0; i < Field.FIELD_SIZE; i++)
                 for (int j = 0; j < Field.FIELD_SIZE; j++) {
-                    if (MainClass.f1.isCellEmpty(i, j)) {
-                        MainClass.f1.setNode(i, j, Fig);
-                        if (stepDesition != "StopEnemy!" && MainClass.f1.checkWinner(Fig)) {
+                    if (targetField.isCellEmpty(i, j)) {
+                        targetField.setNode(i, j, Fig);
+                        if (stepDesition != "StopEnemy!" && targetField.checkWinner(Fig)) {
                             y = i;
                             x = j;
                             stepDesition = "CheckMate!";
-                            MainClass.f1.setNode(y, x, Fig);
+                            targetField.setNode(y, x, Fig);
                         } else
-                            MainClass.f1.setNode(i, j, '*');
+                            targetField.setNode(i, j, '*');
                     }
                 }
         }
@@ -80,7 +79,7 @@ public class AutoPlayer {//Класс компьютерого игрока. З�
         int len;
         int li = 0;
         int maxlen = 0;
-        //lineList = MainClass.f1.listLineBuilder(Fig);
+        //lineList = targetField.listLineBuilder(Fig);
         for (int i = 0; i < lineList.size(); i++) {
             len = ((LineObj)lineList.get(i)).getLength();
             if(len > maxlen) {
@@ -95,7 +94,7 @@ public class AutoPlayer {//Класс компьютерого игрока. З�
         for(int n = 0; n < Field.WIN_LENGTH; n++)
         {
             if(_line.charAt(n) == '*') {//Вставляем там где пусто
-                MainClass.f1.setNode((_y + _vy * n), (_x + _vx * n), Fig);
+                targetField.setNode((_y + _vy * n), (_x + _vx * n), Fig);
                 MainClass.prt("I push in " + (_y + _vy * n) + " " + (_x + _vx * n));
                 break;
             }

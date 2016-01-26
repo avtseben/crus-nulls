@@ -6,7 +6,7 @@ public class Field {//В этом классе поле и все методы �
 
     private Scanner sc = new Scanner(System.in);
     private char field[][];
-    public static int FIELD_SIZE;
+    public static int FIELD_SIZE = 10;
     public static int WIN_LENGTH;//Длина последовательности при которой наступает выйгрыш
 
 

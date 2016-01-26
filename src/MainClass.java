@@ -1,5 +1,4 @@
 
-import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -11,37 +10,46 @@ import java.util.Scanner;
  * Интелект в том чтобы в классе Field метод lineBuilder из существующих крестиков и ноликов на поле формирует объекты класса LineObj.
  * Объекты - линии имеют характеристики: начальная точка (x, y), направление роста и кол-во своих фишек в этой линии, а так же содержит
  * String переменную, в которой скопированая сама строка (например *О*О).
- * Потом из списка объектов-линий выбирается та в которой больше всего своих фишек, и в нее дописывается следующая.
+ * Потом, из списка объектов-линий выбирается та в которой больше всего своих фишек, и в нее дописывается следующая.
  * В качестве развития. Предполагается что комьпютер будет иметь дело с двумя списками ArrayList хранящими свои линии (O) и игрока(X) и основываясь
  * на максимально длинной линии принимать решение либо блокировать линию игрока либо наращивать свою
  */
 public class MainClass {
 
-    public static Random rand = new Random();
+//    public static Random rand = new Random();
     public static void prt(String s) {System.out.println(s);}
-    public static Field f1 = new Field();
+//    public static Field f1 = new Field();
     public static void main (String[] args)
     {
 
         Scanner sc = new Scanner(System.in);
-        System.out.println("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
         boolean myTurn = true;
-        char myFig = 'X';
-        char compFig = 'O';
+        char Fig1 = 'X';
+        char Fig2 = 'O';
+        Field f1 = new Field();
+        Player p1 = new HumanPlayer(Fig1, f1);
+        CompPlayer p2 = new CompPlayer(Fig2, f1);
 
-         AutoPlayer ap2 = new AutoPlayer(compFig);
+/*        prt("Выбирете вариант игры:");
+        prt("   1. Игрок против компьютера");
+        prt("   2. Компьютер против компьютера");
+        int v = sc.nextInt();
+        if(v == 1) {
+            prt("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
+            (HumanPlayer)p1 = new HumanPlayer(Fig1, f1);
+            (CompPlayer)p2 = new CompPlayer(Fig2, f1);
+        }
+        if(v == 2) {
+            prt("Игра Крестики-Нолики. Комьпютер против компьютера");
+            p1 = new CompPlayer(Fig1, f1);
+            p2 = new CompPlayer(Fig2, f1);
+        }
+*/
         f1.showField();
-
         while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
-            int x,y;
             if(myTurn) {
-                do {
-                    prt("Введите координаты в формате x y");
-                    x = sc.nextInt() - 1; //Игрок указывает координаты считая от 1-цы
-                    y = sc.nextInt() - 1; //Конвертируем это в нумерацию элементов массива
-                } while (!f1.isCellEmpty(y, x));
-                f1.setNode(y, x, myFig);
-                if(f1.checkWinner(myFig))
+                p1.doStep();
+                if(f1.checkWinner(Fig1))
                 {
                     prt("Игрок победил!");
                     f1.showField();
@@ -51,8 +59,8 @@ public class MainClass {
             }
             else
             {
-                ap2.doStep();//Компьютер ходит
-                if(f1.checkWinner(compFig))
+                p2.doStep();//Компьютер ходит
+                if(f1.checkWinner(Fig2))
                 {
                     prt("Компьютер победил!");
                     f1.showField();
