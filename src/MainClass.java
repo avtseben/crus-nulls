@@ -30,29 +30,44 @@ public class MainClass {
         Field f1 = new Field();
         Player p1 = new CompPlayer(Fig1, f1);
         Player p2 = new CompPlayer(Fig2, f1);
+	boolean p1LinePosibility = true;
+	boolean p2LinePosibility = true;
 
-        prt("Выбирете вариант игры:");
+        prt("Выбирите вариант игры:");
         prt("   1. Игрок против компьютера");
         prt("   2. Компьютер против компьютера");
+        prt("   3. Человек против человека");
         int v = sc.nextInt();
         if(v == 1) {
             prt("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
             p1 = new HumanPlayer(Fig1, f1);
             //p2 = new CompPlayer(Fig2, f1);
         }
-        if(v == 2) {
+	if(v == 2) {
             prt("Игра Крестики-Нолики. Комьпютер против компьютера");
             //p1 = new CompPlayer(Fig1, f1);
             //p2 = new CompPlayer(Fig2, f1);
         }
 
-        f1.showField();
-        while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
+        if(v == 3) {
+            prt("Игра Крестики-Нолики. Человек против человека");
+            p1 = new HumanPlayer(Fig1, f1);
+            p2 = new HumanPlayer(Fig2, f1);
+        }
 
+        f1.showField();
+	prt("=====Начинаем игру. Игрок№1 ходит крестиками======");
+        while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
+	if(stepCounter > 900) { prt("Сработала защита от бесконечного цикла"); break; }
+
+	if(!(p1LinePosibility && p2LinePosibility)) {
+	    prt("Ничья, никто не может построить свою линию");
+	    break; 
+	}
             stepCounter++;
             prt("---------Ход номер: " + stepCounter );
             if(myTurn) {
-                p1.doStep();
+                p1LinePosibility = p1.doStep();
                 if(f1.checkWinner(Fig1))
                 {
                     prt("Игрок №1, " + p1.getType() + " , победил!" );
@@ -63,7 +78,7 @@ public class MainClass {
             }
             else
             {
-                p2.doStep();//Компьютер ходит
+                p2LinePosibility = p2.doStep();//Компьютер ходит
                 if(f1.checkWinner(Fig2))
                 {
                     prt("Игрок №2, " + p2.getType() + " , победил!" );

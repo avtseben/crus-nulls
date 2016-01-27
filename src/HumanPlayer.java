@@ -11,7 +11,7 @@ public class HumanPlayer extends Player {
         playerType = "Человек";
     }
     public String getType() { return playerType; }
-    public void doStep()
+    public boolean doStep()
     {
         int x,y;
         do {
@@ -20,5 +20,6 @@ public class HumanPlayer extends Player {
             y = sc.nextInt() - 1; //Конвертируем это в нумерацию элементов массива
         } while (!targetField.isCellEmpty(y, x));
         targetField.setNode(y, x, Fig);
+	return true;
     }
 }

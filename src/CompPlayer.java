@@ -1,5 +1,3 @@
-import org.apache.log4j.chainsaw.Main;
-
 import java.util.Random;
 
 public class CompPlayer extends Player {
@@ -29,12 +27,11 @@ public class CompPlayer extends Player {
     }
 
 
-    public void doStep()
+     public boolean doStep()
     {
         int x,y;
         String stepDesition = "";
         lineList = targetField.listLineBuilder(Fig);//Собирает информацию о линиях на поле
-        if(lineList.isEmpty()) MainClass.prt("Нет возможности построить линию");
         if(myFirstStep()) {
             //1. Если для это мой первый ход. Случайно подбираем координаты
             stepDesition = "random";
@@ -44,6 +41,7 @@ public class CompPlayer extends Player {
             } while (!targetField.isCellEmpty(y, x));
             targetField.setNode(y, x, Fig);
             MainClass.prt("Comp Step Desition is: " + stepDesition);
+	    return true;
         }
         else {
             //2.Проверка на шах и мат
@@ -59,6 +57,7 @@ public class CompPlayer extends Player {
                             targetField.setNode(y, x, Fig);
                             MainClass.prt("Comp Step Desition is: " + stepDesition);
                             MainClass.prt("Block in:" + (j+1) + " " + (i+1));
+			    return true;
                         } else
                             targetField.setNode(i, j, '*');
                     }
@@ -74,18 +73,22 @@ public class CompPlayer extends Player {
                             targetField.setNode(y, x, Fig);
                             MainClass.prt("Comp Step Desition is: " + stepDesition);
                             MainClass.prt("Mate in:" + (j+1) + " " + (i+1));
+			    return true;
                         } else
                             targetField.setNode(i, j, '*');
                     }
                 }
 
         }
-        if(!(stepDesition == "random" || stepDesition == "CheckMate!" || stepDesition == "StopEnemy!") || lineList.isEmpty() ) {
-            stepDesition = "fillMyLine"; //Если это не первый мой ход и мат не поставишь и нет нужды блокировать протизника
+        if(!(stepDesition == "random" || stepDesition == "CheckMate!" || stepDesition == "StopEnemy!" || lineList.isEmpty() )) {
+            stepDesition = "fillMyLine"; //Если это не первый мой ход и мат не поставишь и нет нужды блокировать протиdника
             fillLineOnField();//Заполняем свои линии
             MainClass.prt("Comp Step Desition is: " + stepDesition);
+	    return true;
         }
-
+	//Ходы кончились
+        if(lineList.isEmpty()) MainClass.prt("Нет возможности построить линию");
+	return false;
     }
 
     private int getLongest()//Возвращает номер(в списке) самой длинной линии
