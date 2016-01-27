@@ -1,20 +1,30 @@
+import org.apache.log4j.chainsaw.Main;
+
 import java.util.Random;
 
 public class CompPlayer extends Player {
 
     private Random rand = new Random();
+    private String playerType;
 
     public CompPlayer (char _Fig, Field _f)
     {
         super(_Fig, _f);
         if(Fig == 'X') enemyFig = 'O';
         else enemyFig = 'X';
+        playerType = "Компьютер";
     }
 
-    private boolean myFirstStep()
+    public String getType() { return playerType; }
+/*     private boolean myFirstStep()
     {
         LineObj line = (LineObj) lineList.get(getLongest());
         if(line.getLength() == 0) return true;
+        else return false;
+    }*/
+    private boolean myFirstStep()
+    {
+        if (MainClass.stepCounter < 3) return true;//Первые ходы Компьютера
         else return false;
     }
 
@@ -24,7 +34,7 @@ public class CompPlayer extends Player {
         int x,y;
         String stepDesition = "";
         lineList = targetField.listLineBuilder(Fig);//Собирает информацию о линиях на поле
-
+        if(lineList.isEmpty()) MainClass.prt("Нет возможности построить линию");
         if(myFirstStep()) {
             //1. Если для это мой первый ход. Случайно подбираем координаты
             stepDesition = "random";
@@ -47,26 +57,30 @@ public class CompPlayer extends Player {
                             x = j;
                             stepDesition = "StopEnemy!";
                             targetField.setNode(y, x, Fig);
+                            MainClass.prt("Comp Step Desition is: " + stepDesition);
+                            MainClass.prt("Block in:" + (j+1) + " " + (i+1));
+                        } else
+                            targetField.setNode(i, j, '*');
+                    }
+                }
+            for (int i = 0; i < Field.FIELD_SIZE; i++)
+                for (int j = 0; j < Field.FIELD_SIZE; j++) {
+                    if (targetField.isCellEmpty(i, j)) {
+                        targetField.setNode(i, j, Fig);
+                        if (stepDesition != "StopEnemy!" && stepDesition != "CheckMate!" && targetField.checkWinner(Fig)) {
+                            y = i;
+                            x = j;
+                            stepDesition = "CheckMate!";
+                            targetField.setNode(y, x, Fig);
+                            MainClass.prt("Comp Step Desition is: " + stepDesition);
+                            MainClass.prt("Mate in:" + (j+1) + " " + (i+1));
                         } else
                             targetField.setNode(i, j, '*');
                     }
                 }
 
-            for (int i = 0; i < Field.FIELD_SIZE; i++)
-                for (int j = 0; j < Field.FIELD_SIZE; j++) {
-                    if (targetField.isCellEmpty(i, j)) {
-                        targetField.setNode(i, j, Fig);
-                        if (stepDesition != "StopEnemy!" && targetField.checkWinner(Fig)) {
-                            y = i;
-                            x = j;
-                            stepDesition = "CheckMate!";
-                            targetField.setNode(y, x, Fig);
-                        } else
-                            targetField.setNode(i, j, '*');
-                    }
-                }
         }
-        if(!(stepDesition == "random" || stepDesition == "CheckMate!" || stepDesition == "StopEnemy!")) {
+        if(!(stepDesition == "random" || stepDesition == "CheckMate!" || stepDesition == "StopEnemy!") || lineList.isEmpty() ) {
             stepDesition = "fillMyLine"; //Если это не первый мой ход и мат не поставишь и нет нужды блокировать протизника
             fillLineOnField();//Заполняем свои линии
             MainClass.prt("Comp Step Desition is: " + stepDesition);
@@ -95,7 +109,7 @@ public class CompPlayer extends Player {
         {
             if(_line.charAt(n) == '*') {//Вставляем там где пусто
                 targetField.setNode((_y + _vy * n), (_x + _vx * n), Fig);
-                MainClass.prt("I push in " + (_y + _vy * n) + " " + (_x + _vx * n));
+                MainClass.prt("My step is: " + ((_x + _vx * n)+1) + " " + ((_y + _vy * n)+1));
                 break;
             }
         }

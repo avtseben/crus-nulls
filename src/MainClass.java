@@ -16,9 +16,10 @@ import java.util.Scanner;
  */
 public class MainClass {
 
-//    public static Random rand = new Random();
     public static void prt(String s) {System.out.println(s);}
-//    public static Field f1 = new Field();
+    public static int stepCounter = 0;//Счетчик ходов
+
+
     public static void main (String[] args)
     {
 
@@ -27,31 +28,34 @@ public class MainClass {
         char Fig1 = 'X';
         char Fig2 = 'O';
         Field f1 = new Field();
-        Player p1 = new HumanPlayer(Fig1, f1);
-        CompPlayer p2 = new CompPlayer(Fig2, f1);
+        Player p1 = new CompPlayer(Fig1, f1);
+        Player p2 = new CompPlayer(Fig2, f1);
 
-/*        prt("Выбирете вариант игры:");
+        prt("Выбирете вариант игры:");
         prt("   1. Игрок против компьютера");
         prt("   2. Компьютер против компьютера");
         int v = sc.nextInt();
         if(v == 1) {
             prt("Игра Крестики-Нолики. Вы играете крестиками, ваш ход первый");
-            (HumanPlayer)p1 = new HumanPlayer(Fig1, f1);
-            (CompPlayer)p2 = new CompPlayer(Fig2, f1);
+            p1 = new HumanPlayer(Fig1, f1);
+            //p2 = new CompPlayer(Fig2, f1);
         }
         if(v == 2) {
             prt("Игра Крестики-Нолики. Комьпютер против компьютера");
-            p1 = new CompPlayer(Fig1, f1);
-            p2 = new CompPlayer(Fig2, f1);
+            //p1 = new CompPlayer(Fig1, f1);
+            //p2 = new CompPlayer(Fig2, f1);
         }
-*/
+
         f1.showField();
         while(f1.checkFreeNode()) {//Перед каждым ходом проверяе есть ли еще свободные ячейки
+
+            stepCounter++;
+            prt("---------Ход номер: " + stepCounter );
             if(myTurn) {
                 p1.doStep();
                 if(f1.checkWinner(Fig1))
                 {
-                    prt("Игрок победил!");
+                    prt("Игрок №1, " + p1.getType() + " , победил!" );
                     f1.showField();
                     break;
                 }
@@ -62,7 +66,7 @@ public class MainClass {
                 p2.doStep();//Компьютер ходит
                 if(f1.checkWinner(Fig2))
                 {
-                    prt("Компьютер победил!");
+                    prt("Игрок №2, " + p2.getType() + " , победил!" );
                     f1.showField();
                     break;
                 }

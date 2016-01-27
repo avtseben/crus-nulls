@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.server.ServerRtException;
+
 import java.util.ArrayList;
 
 /**
@@ -9,6 +11,7 @@ public class Player {
     protected char enemyFig;
     protected static ArrayList lineList = new ArrayList();
     protected Field targetField;
+    protected String playerType;
 
     public Player (char _Fig, Field _f)
     {
@@ -16,6 +19,8 @@ public class Player {
        // if(Fig == 'X') enemyFig = 'O';
        // else enemyFig = 'X';
         targetField = _f;
+        playerType = "default";
     }
     public void doStep() {}//Без этого я не могу в мэйн сделать  Player p = new HumanPlayer()
+    public String getType() { return playerType; }//Без этого я не могу в мэйн сделать  Player p = new HumanPlayer()
 }

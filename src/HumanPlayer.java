@@ -3,12 +3,14 @@ import java.util.Scanner;
 public class HumanPlayer extends Player {
 
     Scanner sc = new Scanner(System.in);
+    private String playerType;
 
     public HumanPlayer (char _Fig, Field _f)
     {
         super(_Fig, _f);
-
+        playerType = "Человек";
     }
+    public String getType() { return playerType; }
     public void doStep()
     {
         int x,y;
@@ -18,10 +20,5 @@ public class HumanPlayer extends Player {
             y = sc.nextInt() - 1; //Конвертируем это в нумерацию элементов массива
         } while (!targetField.isCellEmpty(y, x));
         targetField.setNode(y, x, Fig);
-        if(targetField.checkWinner(Fig))
-        {
-            MainClass.prt("Игрок победил!");
-            targetField.showField();
-        }
     }
 }
